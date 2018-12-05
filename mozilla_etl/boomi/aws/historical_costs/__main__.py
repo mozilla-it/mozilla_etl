@@ -237,7 +237,8 @@ def get_graph(**options):
         summarize_costs,
         bonobo.UnpackItems(0),
         bonobo_sqlalchemy.InsertOrUpdate(
-            table_name='fact_itsm_aws_historical_cost'  + options['table_suffix'],
+            table_name='fact_itsm_aws_historical_cost' +
+            options['table_suffix'],
             discriminant=(
                 'productname',
                 'date_sk',
@@ -275,7 +276,7 @@ def get_graph(**options):
 
     graph.add_chain(
         bonobo_sqlalchemy.InsertOrUpdate(
-            table_name=options['table']  + options['table_suffix'],
+            table_name=options['table'] + options['table_suffix'],
             discriminant=('invoiceid', 'linkedaccountid', 'payeraccountid',
                           'recordid'),
             engine='database'),

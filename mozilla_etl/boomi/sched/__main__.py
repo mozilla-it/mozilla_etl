@@ -59,6 +59,7 @@ def get_sheet():
     result = sheet.values().get(
         spreadsheetId=SAMPLE_SPREADSHEET_ID,
         range=SAMPLE_RANGE_NAME).execute()
+
     for value in result.get('values'):
         if len(value) < 24:
             value.extend([""] * (24 - len(value)))
@@ -67,8 +68,9 @@ def get_sheet():
 
 @use_raw_input
 @use_context_processor(cache)
-def cache_sheet(cache, row):
-    if row.get('last_modified'):
+def cache_sched(cache, row):
+    event_key = row.get('event_key')
+    if event_key:
         event_key = row.get('event_key')
         cache[event_key] = row._asdict()
         yield NOT_MODIFIED
@@ -78,18 +80,28 @@ def cache_sheet(cache, row):
 @use_context_processor(cache)
 def modified_events(cache, row):
     event_key = row.get('event_key')
-    google_event = cache[event_key]
+    name = row.get('name')
+    active = row.get('active')
+    last_modified = row.get('last_modified', 'N')
 
-    if google_event['last_modified'] == "Y":
+    changed = False
 
-        event = row._asdict()
-        event['google'] = google_event
+    if name != "" and active != 'N' and last_modified == "Y":
+        if event_key in cache:
+            sched_event = cache[event_key]
+            changed = "modified"
+        else:
+            changed = "new"
+            sched_event = {}
 
-        yield event
+        if changed:
+            event = row._asdict()
+            event['sched'] = sched_event
+            event['sched']['change'] = changed
+            yield event
 
 
 def sync_event(event):
-
     return NOT_MODIFIED
 
 
@@ -107,10 +119,7 @@ def get_sched_graph(**options):
     graph = bonobo.Graph(
         get_sched,
         bonobo.UnpackItems(0),
-        modified_events,
-        sync_event,
-        bonobo.UnpackItems(0),
-        bonobo.PrettyPrinter(),
+        cache_sched,
         bonobo.count,
     )
 
@@ -152,7 +161,8 @@ def get_sheet_graph(**options):
             "audience1",
             "audience2",
         ]),
-        cache_sheet,
+        modified_events,
+        bonobo.PrettyPrinter(),
         bonobo.count,
     )
 
@@ -190,6 +200,6 @@ if __name__ == '__main__':
         services = get_services(**options)
         add_default_services(services, options)
 
-        bonobo.run(get_sheet_graph(**options), services=services)
-
         bonobo.run(get_sched_graph(**options), services=services)
+
+        bonobo.run(get_sheet_graph(**options), services=services)
