@@ -163,6 +163,11 @@ def get_bu_graph(**options):
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
+        bonobo.CsvWriter(
+            'ProductLineLevel1.txt' + options['suffix'],
+            lineterminator="\n",
+            delimiter="\t",
+            fs="centerstone"),
         _input=centerstone_BussUnit_remap)
     graph.add_chain(
         teamLevel3_remap,
@@ -172,6 +177,11 @@ def get_bu_graph(**options):
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
+        bonobo.CsvWriter(
+            'TeamLevel3.txt' + options['suffix'],
+            lineterminator="\n",
+            delimiter="\t",
+            fs="centerstone"),
         _input=centerstone_BussUnit_remap)
 
     return graph
