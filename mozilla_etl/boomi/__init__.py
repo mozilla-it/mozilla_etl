@@ -67,8 +67,8 @@ def add_default_services(services, options):
         echo=False)
 
     if options['local']:
-        services['brickftp'] = fs.open_fs("file:///tmp/etl")
-        services['centerstone'] = fs.open_fs("file:///tmp/etl")
+        services['brickftp'] = fs.open_fs("file:///tmp/etl/brickftp")
+        services['centerstone'] = fs.open_fs("file:///tmp/etl/centerstone")
     else:
         services['brickftp'] = fs.open_fs(
             "ssh://%s@%s" % (options['brickftp_username'],
@@ -76,7 +76,7 @@ def add_default_services(services, options):
         # Bug workaround to brickftp's sftp-only server
         services['brickftp']._platform = "Linux"
         services['centerstone'] = fs.open_fs(
-            "ssh://MozillaBrickFTP@ftp.asset-fm.com:/Out/"),
+            "ssh://mozilla@files.manhattan-online.com:/mozilla/prod/"),
 
     if options['use_cache']:
         from requests_cache import CachedSession
