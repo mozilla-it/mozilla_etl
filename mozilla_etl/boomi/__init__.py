@@ -190,7 +190,7 @@ def add_default_arguments(parser):
         default="postgresql://{username}:{password}@{host}:{port}/{name}")
 
     parser.add_argument(
-        '--environment', type=str, required=False, default="stage")
+        '--environment', type=str, required=False, default=os.getenv('ENVIRONMENT','stage'))
 
     parser.add_argument(
         '--now',
