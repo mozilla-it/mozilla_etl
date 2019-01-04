@@ -73,7 +73,7 @@ def get_workday_employee_graph(**options):
         get_workday_users, workday_centerstone_employee_remap,
         bonobo.UnpackItems(0),
         bonobo.CsvWriter(
-            'workday-users.csv' + options['suffix'],
+            '/etl/centerstone/downloads/workday-users.csv' + options['suffix'],
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
@@ -87,7 +87,7 @@ def get_workday_employee_graph(**options):
         split_active_employee,
         bonobo.UnpackItems(0),
         HeaderlessCsvWriter(
-            'Mozilla_Active_Users.txt' + options['suffix'],
+            '/etl/centerstone/downloads/Mozilla_Active_Users.txt' + options['suffix'],
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
@@ -102,7 +102,7 @@ def get_workday_employee_graph(**options):
         split_termed_employee,
         bonobo.UnpackItems(0),
         HeaderlessCsvWriter(
-            'Mozilla_Termed_Users.txt' + options['suffix'],
+            '/etl/centerstone/downloads/Mozilla_Termed_Users.txt' + options['suffix'],
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
