@@ -162,7 +162,7 @@ def get_sheet_graph(**options):
             "audience2",
         ]),
         modified_events,
-        bonobo.PrettyPrinter(),
+        #bonobo.PrettyPrinter(),
         bonobo.count,
     )
 

@@ -263,9 +263,7 @@ def get_cs_graph(**options):
         update = (update_employee_record, )
 
     graph.add_chain(
-        bonobo.PrettyPrinter(),
         *update,
-        bonobo.PrettyPrinter(),
         _input=split_employees)
 
     # Dump out outlier employees

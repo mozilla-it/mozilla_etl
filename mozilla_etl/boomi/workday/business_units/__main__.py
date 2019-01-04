@@ -156,7 +156,7 @@ def get_bu_graph(**options):
         productLineLevel1_remap,
         unique_product_line,
         bonobo.UnpackItems(0),
-        bonobo.PrettyPrinter(),
+        #bonobo.PrettyPrinter(),
         bonobo.CsvWriter(
             '/etl/centerstone/downloads/ProductLineLevel1.txt' +
             options['suffix'],
