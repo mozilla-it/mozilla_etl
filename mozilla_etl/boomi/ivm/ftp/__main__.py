@@ -162,7 +162,7 @@ if __name__ == '__main__':
     add_default_arguments(parser)
 
     parser.add_argument(
-        '--table-name', type=str, default=os.getenv('BOOMI_TABLE', 'ivm_etl'))
+        '--table-name', type=str, default=os.getenv('BOOMI_TABLE', 'ivm'))
 
     with bonobo.parse_args(parser) as options:
         services = get_services(**options)

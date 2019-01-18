@@ -121,7 +121,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--table-name',
         type=str,
-        default=os.getenv('BOOMI_TABLE', 'ccure_activity_etl'))
+        default=os.getenv('BOOMI_TABLE', 'ccure_activity'))
 
     with bonobo.parse_args(parser) as options:
         services = get_services(**options)
