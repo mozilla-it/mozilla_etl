@@ -12,6 +12,8 @@ import re
 import io
 import csv
 
+import logging
+
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -26,6 +28,8 @@ import datetime
 from zeep import Client
 from zeep.wsse.username import UsernameToken
 import zeep.exceptions
+
+REPORT_LOG = 'report.log'
 
 OFFICE_IDS = {
     'San Francisco': 'SF',
@@ -114,6 +118,29 @@ def split_tabs(row):
             'EmployeeID', 'OfficeLocation', 'WorkLocation_CS',
             'WorkLocation_WD', 'SeatID'
         ], row.split("\t")))
+
+
+def report(self, context):
+    with open(REPORT_LOG, 'w'):
+        pass
+    logger = logging.getLogger(__package__)
+    difflog = logging.FileHandler(REPORT_LOG)
+    formatter = logging.Formatter(
+        '[%(asctime)s] %(name)s [%(levelname)s]: %(message)s')
+    difflog.setFormatter(formatter)
+    logger.addHandler(difflog)
+    yield logger
+
+
+@use_context_processor(report)
+def report_differences(report, row):
+    fname = row['wpr']['First_Name']
+    lname = row['wpr']['Last_Name']
+    report.warn(
+        "Employee ID %s (%s, %s) has seat %s in Centerstone and %s in Workday"
+        % (row['EmployeeID'], lname, fname, row['SeatID'],
+           row['wpr']['WPR_Desk_Number']))
+    return NOT_MODIFIED
 
 
 def mismatch(row):
@@ -245,7 +272,7 @@ def get_cs_graph(**options):
 
     graph.add_chain(
         bonobo.FileReader(
-            path='HrExport.txt',
+            path='Export/MozillaHRSpaceExportTab.txt',
             fs='centerstone',
             encoding='latin-1',
             eol="\r\n"),
@@ -258,13 +285,11 @@ def get_cs_graph(**options):
 
     # Process regular employees
     if options['dry_run']:
-        update = ()
+        update = (report_differences, )
     else:
         update = (update_employee_record, )
 
-    graph.add_chain(
-        *update,
-        _input=split_employees)
+    graph.add_chain(*update, _input=split_employees)
 
     # Dump out outlier employees
     #graph.add_chain(
