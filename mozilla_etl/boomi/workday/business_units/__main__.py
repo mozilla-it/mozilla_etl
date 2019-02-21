@@ -214,6 +214,11 @@ def get_costcenter_graph(**options):
             lineterminator="\n",
             delimiter="\t",
             fs="brickftp"),
+        bonobo.CsvWriter(
+            'CostCenterLevel2.txt' + options['suffix'],
+            lineterminator="\n",
+            delimiter="\t",
+            fs="centerstone"),
         bonobo.count,
         _name="main")
 
