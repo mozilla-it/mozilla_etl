@@ -60,7 +60,7 @@ setup(
         'fs.sshfs==0.8.0',
         'fs==2.0.27',
         'google-api-python-client==1.7.4',
-        'lxml==4.1.1',
+        'lxml==4.2.5',
         'mysqlclient==1.3.13',
         'oauth2client==4.1.3',
         'psycopg2-binary==2.7.5',
