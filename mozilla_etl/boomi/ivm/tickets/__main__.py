@@ -38,7 +38,7 @@ and b.transaction_date = '{now}';
 """
 
     graph.add_chain(
-        bonobo_sqlalchemy.Select(STMT.format(now=now), engine='redshift'),
+        bonobo_sqlalchemy.Select(STMT.format(now=now), engine=options['engine']),
         trim_employee_id,
         invalid_badge_id,
         invalid_email,
