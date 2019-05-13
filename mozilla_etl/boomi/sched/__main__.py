@@ -6,6 +6,8 @@ from bonobo.config import Service, use, use_no_input, use_context, use_context_p
 from bonobo.config.functools import transformation_factory
 from bonobo.constants import NOT_MODIFIED
 
+import pickle
+
 from dateutil import parser as dateparser
 
 import re
@@ -51,14 +53,26 @@ def get_sched(sched):
 
 
 def get_sheet():
-    store = file.Storage('token.json')
-    creds = store.get()
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
 
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-
-    service = build('sheets', 'v4', http=creds.authorize(Http()))
+    service = build('sheets', 'v4', credentials=creds)
 
     # Call the Sheets API
     sheet = service.spreadsheets()
