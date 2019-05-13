@@ -63,8 +63,7 @@ def get_sheet():
     # Call the Sheets API
     sheet = service.spreadsheets()
     result = sheet.values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=RANGE_NAME).execute()
+        spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
 
     for value in result.get('values'):
         if len(value) < 24:
@@ -114,10 +113,29 @@ def add_event(event, sched):
 
     add_url = "https://{conference}.sched.com/api/session/add".format(
         conference=SCHED_CONFERENCE)
+
+    session_start = dateparser.parse(event['event_start'])
+    session_start_time = dateparser.parse(event['eventstarttime'])
+    session_start = session_start.replace(
+        hour=session_start_time.hour, minute=session_start_time.minute)
+
+    session_end = dateparser.parse(event['event_end'])
+    session_end_time = dateparser.parse(event['eventendtime'])
+    session_end = session_end.replace(
+        hour=session_end_time.hour, minute=session_end_time.minute)
+
     params = {
         'api_key': SCHED_API_KEY,
         'format': 'json',
+        'session_key': event['event_key'],
+        'name': event['name'],
+        'session_type': event['event_type'],
+        'session_start': session_start.strftime("%Y-%m-%d %H:%M"),
+        'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
+        'description': event['description'],
+        'venue': event['venue'],
     }
+
     res = sched.get(add_url, params=params)
 
     this = dict(event)
@@ -138,15 +156,34 @@ def add_event(event, sched):
 
 @use('sched')
 def modify_event(event, sched):
-    if event['sched']['change'] != "changed":
+    if event['sched']['change'] != "modified":
         return NOT_MODIFIED
 
     mod_url = "https://{conference}.sched.com/api/session/mod".format(
         conference=SCHED_CONFERENCE)
+
+    session_start = dateparser.parse(event['event_start'])
+    session_start_time = dateparser.parse(event['eventstarttime'])
+    session_start = session_start.replace(
+        hour=session_start_time.hour, minute=session_start_time.minute)
+
+    session_end = dateparser.parse(event['event_end'])
+    session_end_time = dateparser.parse(event['eventendtime'])
+    session_end = session_end.replace(
+        hour=session_end_time.hour, minute=session_end_time.minute)
+
     params = {
         'api_key': SCHED_API_KEY,
         'format': 'json',
+        'session_key': event['event_key'],
+        'name': event['name'],
+        'session_type': event['event_type'],
+        'session_start': session_start.strftime("%Y-%m-%d %H:%M"),
+        'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
+        'description': event['description'],
+        'venue': event['venue'],
     }
+
     res = sched.get(mod_url, params=params)
 
     this = dict(event)
@@ -160,7 +197,7 @@ def modify_event(event, sched):
         error = True
 
     if res.status_code == 200 and not error:
-        this['sched']['change'] = "modified"
+        this['sched']['change'] = "changed"
 
     return this
 
