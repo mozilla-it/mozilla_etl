@@ -112,9 +112,26 @@ def add_event(event, sched):
     if event['sched']['change'] != "new":
         return NOT_MODIFIED
 
+    add_url = "https://{conference}.sched.com/api/session/add".format(
+        conference=SCHED_CONFERENCE)
+    params = {
+        'api_key': SCHED_API_KEY,
+        'format': 'json',
+    }
+    res = sched.get(add_url, params=params)
+
     this = dict(event)
 
-    this['sched']['change'] = "created"
+    this['sched']['res'] = res.content
+    this['sched']['code'] = res.status_code
+
+    error = False
+    if res.content.startswith(b'ERR: '):
+        this['sched']['error'] = res.content
+        error = True
+
+    if res.status_code == 200 and not error:
+        this['sched']['change'] = "created"
 
     return this
 
@@ -124,9 +141,26 @@ def modify_event(event, sched):
     if event['sched']['change'] != "changed":
         return NOT_MODIFIED
 
+    mod_url = "https://{conference}.sched.com/api/session/mod".format(
+        conference=SCHED_CONFERENCE)
+    params = {
+        'api_key': SCHED_API_KEY,
+        'format': 'json',
+    }
+    res = sched.get(mod_url, params=params)
+
     this = dict(event)
 
-    this['sched']['change'] = "modified"
+    this['sched']['res'] = res.content
+    this['sched']['code'] = res.status_code
+
+    error = False
+    if res.content.startswith(b'ERR: '):
+        this['sched']['error'] = res.content
+        error = True
+
+    if res.status_code == 200 and not error:
+        this['sched']['change'] = "modified"
 
     return this
 
