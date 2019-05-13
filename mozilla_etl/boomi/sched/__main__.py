@@ -23,8 +23,8 @@ from oauth2client import file, client, tools
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1Xl0ELlLmiCh4V0uwWv-qe28kN0N0BwK9dUBq6xNLZx8'
-SAMPLE_RANGE_NAME = 'A4:X'
+SPREADSHEET_ID = '1Xl0ELlLmiCh4V0uwWv-qe28kN0N0BwK9dUBq6xNLZx8'
+RANGE_NAME = 'A4:X'
 
 SCHED_CONFERENCE = 'whistlerallhandsjune2019'
 SCHED_API_KEY = os.getenv('SCHED_API_KEY')
@@ -63,8 +63,8 @@ def get_sheet():
     # Call the Sheets API
     sheet = service.spreadsheets()
     result = sheet.values().get(
-        spreadsheetId=SAMPLE_SPREADSHEET_ID,
-        range=SAMPLE_RANGE_NAME).execute()
+        spreadsheetId=SPREADSHEET_ID,
+        range=RANGE_NAME).execute()
 
     for value in result.get('values'):
         if len(value) < 24:
