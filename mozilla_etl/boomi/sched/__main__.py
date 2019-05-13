@@ -36,11 +36,17 @@ def cache(self, context):
     yield _cache
 
 
-def get_sched():
-    for event in requests.get(
-            "https://{conference}.sched.com/api/session/list?api_key={api_key}&format=json&custom_data=Y"
-            .format(conference=SCHED_CONFERENCE,
-                    api_key=SCHED_API_KEY)).json():
+@use('sched')
+def get_sched(sched):
+    params = {
+        'api_key': SCHED_API_KEY,
+        'format': 'json',
+        'custom_data': 'Y',
+    }
+    for event in sched.get(
+            "https://{conference}.sched.com/api/session/list".format(
+                conference=SCHED_CONFERENCE, api_key=SCHED_API_KEY),
+            params=params).json():
         yield event
 
 
@@ -101,8 +107,28 @@ def modified_events(cache, row):
             yield event
 
 
-def sync_event(event):
-    return NOT_MODIFIED
+@use('sched')
+def add_event(event, sched):
+    if event['sched']['change'] != "new":
+        return NOT_MODIFIED
+
+    this = dict(event)
+
+    this['sched']['change'] = "created"
+
+    return this
+
+
+@use('sched')
+def modify_event(event, sched):
+    if event['sched']['change'] != "changed":
+        return NOT_MODIFIED
+
+    this = dict(event)
+
+    this['sched']['change'] = "modified"
+
+    return this
 
 
 def get_services(**options):
@@ -118,6 +144,7 @@ def get_sched_graph(**options):
     """
     graph = bonobo.Graph(
         get_sched,
+        bonobo.PrettyPrinter(),
         bonobo.UnpackItems(0),
         cache_sched,
         bonobo.count,
@@ -162,7 +189,9 @@ def get_sheet_graph(**options):
             "audience2",
         ]),
         modified_events,
-        #bonobo.PrettyPrinter(),
+        add_event,
+        modify_event,
+        bonobo.PrettyPrinter(),
         bonobo.count,
     )
 
@@ -201,5 +230,4 @@ if __name__ == '__main__':
         add_default_services(services, options)
 
         bonobo.run(get_sched_graph(**options), services=services)
-
         bonobo.run(get_sheet_graph(**options), services=services)

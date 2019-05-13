@@ -82,9 +82,11 @@ def add_default_services(services, options):
         from requests_cache import CachedSession
         services['servicenow'] = CachedSession('http.cache')
         services['workday'] = CachedSession('http.cache')
+        services['sched'] = CachedSession('http.cache')
     else:
         services['servicenow'] = requests.Session()
         services['workday'] = requests.Session()
+        services['sched'] = requests.Session()
 
     services['servicenow'].headers = {'User-Agent': 'Mozilla/ETL/v1'}
     services['servicenow'].auth = HTTPBasicAuth(options['sn_username'],
@@ -190,7 +192,10 @@ def add_default_arguments(parser):
         default="postgresql://{username}:{password}@{host}:{port}/{name}")
 
     parser.add_argument(
-        '--environment', type=str, required=False, default=os.getenv('BOOMI_ENVIRONMENT','stage'))
+        '--environment',
+        type=str,
+        required=False,
+        default=os.getenv('BOOMI_ENVIRONMENT', 'stage'))
 
     parser.add_argument(
         '--now',
