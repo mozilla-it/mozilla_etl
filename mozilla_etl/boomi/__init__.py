@@ -67,6 +67,8 @@ def add_default_services(services, options):
         echo=False)
 
     if options['local']:
+        os.makedirs("/tmp/etl/brickftp", exist_ok=True)
+        os.makedirs("/tmp/etl/centerstone", exist_ok=True)
         services['brickftp'] = fs.open_fs("file:///tmp/etl/brickftp")
         services['centerstone'] = fs.open_fs("file:///tmp/etl/centerstone")
     else:
