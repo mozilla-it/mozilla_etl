@@ -152,6 +152,7 @@ def add_event(event, sched):
         'venue': event['venue'],
         'session_subtype': event['event_subtype'],
         'address': event['address'],
+        'audience1': event['audience1'],
     }
 
     res = sched.get(add_url, params=params)
@@ -201,6 +202,7 @@ def modify_event(event, sched):
         'venue': event['venue'],
         'session_subtype': event['event_subtype'],
         'address': event['address'],
+        'audience1': event['audience1'],
     }
 
     res = sched.get(mod_url, params=params)
