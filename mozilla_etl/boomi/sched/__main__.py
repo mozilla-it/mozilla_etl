@@ -21,6 +21,9 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 
@@ -140,7 +143,6 @@ def add_event(event, sched):
 
     params = {
         'api_key': SCHED_API_KEY,
-        'format': 'json',
         'session_key': event['event_key'],
         'name': event['name'],
         'session_type': event['event_type'],
@@ -148,6 +150,8 @@ def add_event(event, sched):
         'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
         'description': event['description'],
         'venue': event['venue'],
+        'physical_address': event['address'],
+        'address': event['address'],
     }
 
     res = sched.get(add_url, params=params)
@@ -188,7 +192,6 @@ def modify_event(event, sched):
 
     params = {
         'api_key': SCHED_API_KEY,
-        'format': 'json',
         'session_key': event['event_key'],
         'name': event['name'],
         'session_type': event['event_type'],
@@ -196,6 +199,8 @@ def modify_event(event, sched):
         'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
         'description': event['description'],
         'venue': event['venue'],
+        'physical_address': event['address'],
+        'address': event['address'],
     }
 
     res = sched.get(mod_url, params=params)
