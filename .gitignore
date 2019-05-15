@@ -10,3 +10,5 @@
 /dist
 /htmlcov
 /pylint.html
+credentials.json
+token.pickle
