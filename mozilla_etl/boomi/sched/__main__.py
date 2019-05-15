@@ -150,6 +150,7 @@ def add_event(event, sched):
         'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
         'description': event['description'],
         'venue': event['venue'],
+        'session_subtype': event['event_subtype'],
         'address': event['address'],
     }
 
@@ -198,6 +199,7 @@ def modify_event(event, sched):
         'session_end': session_end.strftime("%Y-%m-%d %H:%M"),
         'description': event['description'],
         'venue': event['venue'],
+        'session_subtype': event['event_subtype'],
         'address': event['address'],
     }
 
