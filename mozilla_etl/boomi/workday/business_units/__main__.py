@@ -10,7 +10,7 @@ from bonobo.config import use
 from bonobo.constants import NOT_MODIFIED
 from requests.auth import HTTPBasicAuth
 
-WORKDAY_BASE_URL = 'https://wd2-impl-services1.workday.com'
+WORKDAY_BASE_URL = 'https://services1.myworkday.com'
 COST_CENTERS_QUERY = '/ccx/service/customreport2/vhr_mozilla/ISU_RAAS/intg__Business_Units_Feed?Organizations%21WID=4f414049b78141f3981464563b36ba46!7f8db47cd30d4cdfa5670e37ee0df3ad&Include_Subordinate_Organizations=1&format=csv&bom=true'
 BU_QUERY = '/ccx/service/customreport2/vhr_mozilla/ISU_RAAS/intg__Supervisory_Orgs_Feed?format=csv&bom=true'
 
