@@ -53,7 +53,7 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'example', 'test']),
     include_package_data=True,
     install_requires=[
-        'bonobo==0.6.3',
+        'bonobo==0.6.4',
         'bonobo-sqlalchemy==0.6.1',
         'dateparser==0.7.0',
         'fs-s3fs==0.1.9',
