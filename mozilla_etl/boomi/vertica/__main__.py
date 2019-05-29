@@ -15,7 +15,6 @@ import csv
 
 import logging
 
-import pprint
 import fs
 import datetime
 
@@ -36,9 +35,7 @@ def get_services(**options):
     :return: dict
     """
 
-    return {
-        "output": bonobo.open_fs(options["output"])
-    }
+    return {"output": bonobo.open_fs(options["output"])}
 
 
 def get_graph(**options):
@@ -108,4 +105,14 @@ if __name__ == "__main__":
         services = get_services(**options)
         add_default_services(services, options)
 
-        bonobo.run(get_graph(**options, services=services), services=services)
+        retval = bonobo.run(get_graph(**options, services=services),
+                            services=services)
+        if retval.xstatus != 0:
+            print("Return status: %d" % retval.xstatus)
+            exit(retval.xstatus)
+
+        for node in retval.nodes:
+            stats = node.statistics
+            if stats['err'] > 0 and stats['err'] == stats['in']:
+                print("One step completely failed")
+                exit(1)
