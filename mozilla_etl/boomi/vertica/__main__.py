@@ -107,9 +107,6 @@ if __name__ == "__main__":
 
         retval = bonobo.run(get_graph(**options, services=services),
                             services=services)
-        if retval.xstatus != 0:
-            print("Return status: %d" % retval.xstatus)
-            exit(retval.xstatus)
 
         for node in retval.nodes:
             stats = node.statistics
