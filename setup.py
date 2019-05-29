@@ -64,6 +64,7 @@ setup(
         'lxml==4.2.5',
         'mysqlclient==1.3.13',
         'oauth2client==4.1.3',
+        'pendulum==1.4.4',
         'psycopg2-binary==2.7.5',
         'psycopg2==2.7.5',
         'requests==2.20.0',
