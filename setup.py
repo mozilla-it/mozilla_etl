@@ -57,6 +57,7 @@ setup(
         'bonobo-sqlalchemy==0.6.1',
         'dateparser==0.7.0',
         'fs-s3fs==0.1.9',
+        'fs-gcsfs==0.4.1',
         'fs.sshfs==0.8.0',
         'fs==2.0.27',
         'google-api-python-client==1.7.4',
