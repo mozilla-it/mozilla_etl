@@ -45,7 +45,7 @@ def workday_centerstone_employee_remap(row):
     dict['Cost_Center_Hierarchy'] = row['Cost_Center_Hierarchy']
     dict['Employee_Type'] = row['Employee_Type']
     dict['Employee_Status'] = row['Employee_Status']
-    dict['Long_Title'] = row['Business_Title']
+    dict['Business_Title'] = row['Business_Title']
     dict['Work_Location'] = row['Work_Location']
     dict['Manager'] = row['Manager']
     dict['Team'] = row['Supervisory_Organization']
